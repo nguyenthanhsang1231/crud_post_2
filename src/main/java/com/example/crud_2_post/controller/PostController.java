@@ -7,6 +7,7 @@ import com.example.crud_2_post.model.User;
 import com.example.crud_2_post.repository.PostRepository;
 import com.example.crud_2_post.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -56,9 +57,10 @@ public class PostController {
         List<Post> posts = postRepository.findAllByStatus(status);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
-    @GetMapping("/top4")
-    public ResponseEntity<List<Post>> topbon() {
-        List<Post> list = postRepository.findAllByOrderByLikesDesc();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+    @GetMapping("/top4ByLikes")
+    public ResponseEntity<List<Post>> getTop4PostsByLikes() {
+        PageRequest pageable = PageRequest.of(0, 4);
+        List<Post> top4Posts = postRepository.findTop4ByOrderByLikesDesc(pageable);
+        return new ResponseEntity<>(top4Posts, HttpStatus.OK);
     }
 }
